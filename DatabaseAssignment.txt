@@ -1,0 +1,47 @@
+***Leetcode***
+
+Question 1.  Combine Two Tables
+SELECT p.FirstName, p.LastName, a.City, a.State FROM Person AS p 
+LEFT JOIN Address AS a ON p.PersonId = a.PersonId;
+
+Question 2. Second Highest Salary
+SELECT MAX(Salary) AS SecondHighestSalary FROM Employee 
+WHERE Salary < (SELECT MAX(Salary) FROM Employee);
+
+Question 3. Employees Earning More Than Their Managers
+SELECT e1.Name AS Employee
+FROM Employee e1, Employee e2
+WHERE e1.ManagerId = e2.Id AND e1.Salary > e2.Salary
+
+
+***InterviewBit***
+Question 1. Neutral Reviewers
+SELECT reviewers.reviewer_name
+FROM reviewers
+JOIN ratings
+ON reviewers.reviewer_id = ratings.reviewer_id AND ratings.reviewer_stars is NULL;
+
+Question 2. Movie Characters
+SELECT CONCAT(director_first_name, director_last_name) AS director_name, 
+m.movie_title AS movie_title
+FROM directors d
+INNER JOIN movies_directors md on d.director_id = md.director_id
+INNER JOIN movies_cast mc on md.movie_id = mc.movie_id
+INNER JOIN movies m on mc.movie_id = m.movie_id
+WHERE mc.role = "SeanMaguire";
+
+Question 3. Short Films
+SELECT m.movie_title, m.movie_year, CONCAT(d.director_first_name, d.director_last_name) AS
+director_name, CONCAT(a.actor_first_name, a.actor_last_name) AS actor_name, mc.role
+FROM movies m INNER JOIN movies_cast mc ON m.movie_id = mc.movie_id
+INNER JOIN actors a ON a.actor_id = mc.actor_id
+INNER JOIN movies_directors md ON md.movie_id = m.movie_id
+INNER JOIN directors d ON md.director_id = d.director_id
+WHERE m.movie_time = (
+SELECT MIN(m.movie_time)
+FROM movies m)
+
+Question 4. Actors and their Movies
+SELECT movie_title FROM movies LEFT JOIN movies_cast ON movies.movie_id = movies_cast.movie_id
+WHERE movies_cast.actor_id IN (SELECT actor_id FROM movies_cast GROUP BY actor_id HAVING COUNT(actor_id) > 1);
+
